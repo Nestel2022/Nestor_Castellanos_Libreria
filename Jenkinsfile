@@ -13,10 +13,10 @@ pipeline {
         stage('Static Analysis') {
             steps {
                 // Ejemplo normal (continúa)
-                staticAnalysis(abortPipeline: false)
+                //staticAnalysis(abortPipeline: false)
 
                 // Ejemplo alternativo (aborta)
-                // staticAnalysis(abortPipeline: true)
+                 staticAnalysis(abortPipeline: true)
             }
         }
 
