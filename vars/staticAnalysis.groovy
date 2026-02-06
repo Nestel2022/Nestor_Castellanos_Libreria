@@ -1,5 +1,6 @@
 def call(Map params = [:]) {
     def abortPipeline = params.get('abortPipeline', false)
+    def branchName = env.BRANCH_NAME ?: "unknown"
 
     timeout(time: 5, unit: 'MINUTES') {
         withEnv(["SONAR_ENV=default"]) {
@@ -7,10 +8,15 @@ def call(Map params = [:]) {
         }
     }
 
+    // Heurística de corte
     if (abortPipeline) {
-        error("Pipeline abortado por configuración de staticAnalysis")
+        error("Pipeline abortado: abortPipeline=true")
+    } else if (branchName == "master") {
+        error("Pipeline abortado: ejecución en rama master")
+    } else if (branchName.startsWith("hotfix")) {
+        error("Pipeline abortado: ejecución en rama hotfix")
     } else {
-        echo "Pipeline continúa después del análisis estático"
+        echo "Pipeline continúa en rama ${branchName}"
     }
 }
 
