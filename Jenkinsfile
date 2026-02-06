@@ -1,8 +1,7 @@
-// Importa la librería compartida registrada en Jenkins
 @Library('obsschool-sharedlib') _
 
 pipeline {
-    agent any   // Se puede usar cualquier agente
+    agent any
 
     stages {
         stage('Build') {
@@ -13,9 +12,11 @@ pipeline {
 
         stage('Static Analysis') {
             steps {
-                // Llamada a la función de la librería
-                // abortPipeline: false → el pipeline continúa
+                // Ejemplo normal (continúa)
                 staticAnalysis(abortPipeline: false)
+
+                // Ejemplo alternativo (aborta)
+                // staticAnalysis(abortPipeline: true)
             }
         }
 
