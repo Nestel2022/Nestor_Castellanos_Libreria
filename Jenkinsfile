@@ -4,7 +4,7 @@ pipeline {
     agent any
 
     environment {        
-        BRANCH_NAME = "hotfix-123"
+        BRANCH_NAME = "master"
     }
 
     stages {
