@@ -3,27 +3,16 @@
 pipeline {
     agent any
 
-    environment {        
-        BRANCH_NAME = "hotfix-123"
-    }
-
     stages {
         stage('Build') {
             steps {
-                echo "Compilando proyecto en rama ${env.BRANCH_NAME}..."
+                echo 'Compilando proyecto...'
             }
         }
 
-        stage('Static Analysis') {
+        stage('SonarQube Analysis') {
             steps {
-                // Llamada a la librería con parámetro
                 staticAnalysis(abortPipeline: false)
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo "Desplegando aplicación..."
             }
         }
     }

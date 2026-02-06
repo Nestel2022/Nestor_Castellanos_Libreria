@@ -1,22 +1,18 @@
 def call(Map params = [:]) {
     def abortPipeline = params.get('abortPipeline', false)
-    def branchName = env.BRANCH_NAME ?: "unknown"
 
     timeout(time: 5, unit: 'MINUTES') {
-        withEnv(["SONAR_ENV=default"]) {
-            sh 'echo "Ejecución de las pruebas de calidad de código"'
+        // Usamos el plugin de SonarQube
+        withSonarQubeEnv('SonarQubeServer') {
+            sh 'sonar-scanner'
         }
     }
 
-    // Heurística de corte
-    if (abortPipeline) {
-        error("Pipeline abortado: abortPipeline=true")
-    } else if (branchName == "master") {
-        error("Pipeline abortado: ejecución en rama master")
-    } else if (branchName.startsWith("hotfix")) {
-        error("Pipeline abortado: ejecución en rama hotfix")
+    // Esperar resultados del Quality Gate
+    def qg = waitForQualityGate()
+    if (abortPipeline || qg.status != 'OK') {
+        error("Pipeline abortado: QualityGate = ${qg.status}")
     } else {
-        echo "Pipeline continúa en rama ${branchName}"
+        echo "Pipeline continúa: QualityGate = ${qg.status}"
     }
 }
-
