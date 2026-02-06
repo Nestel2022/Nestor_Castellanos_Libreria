@@ -1,4 +1,6 @@
-def call(boolean abortPipeline = false) {
+def call(Map params = [:]) {
+    def abortPipeline = params.get('abortPipeline', false)
+
     timeout(time: 5, unit: 'MINUTES') {
         withEnv(["SONAR_ENV=default"]) {
             sh 'echo "Ejecución de las pruebas de calidad de código"'
@@ -11,3 +13,4 @@ def call(boolean abortPipeline = false) {
         echo "Pipeline continúa después del análisis estático"
     }
 }
+
